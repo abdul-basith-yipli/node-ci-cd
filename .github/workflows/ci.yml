@@ -48,6 +48,17 @@ jobs:
     # if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: ubuntu-latest
     environment: dev
+
+    services:
+      mongodb:
+        image: mongo:5.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -61,6 +72,8 @@ jobs:
         run: npm install
 
       - name: Run tests
+        env:
+          MONGO_URI: mongodb://localhost:27017/Node-CI-CD-test
         run: npm run test:coverage
 
       - name: Setup environment variables
