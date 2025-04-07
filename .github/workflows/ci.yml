@@ -115,14 +115,17 @@ jobs:
           target: "/home/${{ secrets.EC2_USER }}"
 
       - name: 🔧 Run post-deploy commands
-        run: |
-          echo "Running post-deploy commands..."
-          ssh -i ${{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
             cd /home/${{ secrets.EC2_USER }}
-            unzip -o build.zip -d app
-            cd app
-            ls -a
-            npm ci --omit=dev
-            pm2 reload node-app || pm2 start dist/server.js --name node-app
-          EOF
-          echo "Post-deploy commands completed."
+            unzip -o build.zip
+            rm build.zip
+            npm install --production
+            pm2 reload all ||  pm2 start dist/server.js --name "node-ci-cd"
+            pm2 save
+            pm2 startup
