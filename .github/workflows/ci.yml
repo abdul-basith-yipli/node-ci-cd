@@ -105,5 +105,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
+            bash -l
             cd /home/${{ secrets.EC2_USER }}/app
             pm2 restart all || pm2 start server.js --name "node-app"
