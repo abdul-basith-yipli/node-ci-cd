@@ -25,12 +25,9 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-if (process.env.FEAT_HEALTH_CHECK === "true") {
-  // Health Check
-  app.get("/", (req, res) => {
-    res.send("Hello, Worldd!");
-  });
-}
+app.get("/", (req, res) => {
+  res.send("Hello, World!");
+});
 console.log("Health check enabled:", process.env.FEAT_HEALTH_CHECK);
 console.log("Authentication enabled:", process.env.FEAT_AUTHENTICATION);
 
