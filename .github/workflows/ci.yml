@@ -107,4 +107,5 @@ jobs:
           script: |
             bash -l
             cd /home/${{ secrets.EC2_USER }}/app
-            pm2 restart all || pm2 start server.js --name "node-app"
+            ls -a
+            pm2 restart all || pm2 start dist/server.js --name "node-app"
