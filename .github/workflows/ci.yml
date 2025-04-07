@@ -125,7 +125,7 @@ jobs:
             cd /home/${{ secrets.EC2_USER }}
             unzip -o build.zip
             rm build.zip
-            npm install --production
-            pm2 reload all ||  pm2 start dist/server.js --name "node-ci-cd"
-            pm2 save
-            pm2 startup
+            # npm install --production
+            # pm2 reload all ||  pm2 start dist/server.js --name "node-ci-cd"
+            # pm2 save
+            # pm2 startup
