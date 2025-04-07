@@ -28,7 +28,7 @@ app.use(express.json());
 if (process.env.FEAT_HEALTH_CHECK === "true") {
   // Health Check
   app.get("/", (req, res) => {
-    res.send("Hello, World!");
+    res.send("Hello, Worldd!");
   });
 }
 console.log("Health check enabled:", process.env.FEAT_HEALTH_CHECK);
