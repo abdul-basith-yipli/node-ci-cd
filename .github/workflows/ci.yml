@@ -117,7 +117,7 @@ jobs:
       - name: 🔧 Run post-deploy commands
         run: |
           echo "Running post-deploy commands..."
-          ssh -i ${{ secrets.SSH_KEY }} ubuntu@${{ secrets.SERVER_HOST }} << 'EOF'
+          ssh -i ${{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
             cd /home/${{ secrets.EC2_USER }}
             unzip -o build.zip -d app
             cd app
