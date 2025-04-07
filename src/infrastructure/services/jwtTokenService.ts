@@ -6,8 +6,8 @@ export class JWTTokenService implements ITokenService {
   private readonly expiresIn: string;
 
   constructor(
-    secret: string = process.env.JWT_SECRET || "your-secret-key",
-    expiresIn: string = "1h"
+    secret: string = process.env.JWT_SECRET!,
+    expiresIn: string = process.env.JWT_EXPIRES_IN!
   ) {
     this.secret = secret;
     this.expiresIn = expiresIn;

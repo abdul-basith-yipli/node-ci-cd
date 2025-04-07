@@ -1,6 +1,7 @@
 import { IUserRepository } from "../../../domain/interfaces/userRepository";
 import { User } from "../../../domain/entities/user";
 import { UserModel } from "./models/userModel";
+import { AlreadyExistsError } from "../../../application/errors/customErrors";
 
 export class MongoDBUserRepository implements IUserRepository {
   async create(user: Partial<User>): Promise<User> {
@@ -17,7 +18,7 @@ export class MongoDBUserRepository implements IUserRepository {
     } catch (error: any) {
       if (error.code === 11000) {
         // MongoDB duplicate key error
-        throw new Error("Email already exists");
+        throw new AlreadyExistsError("Email already exists");
       }
       throw new Error(`Failed to create user: ${error.message}`);
     }
