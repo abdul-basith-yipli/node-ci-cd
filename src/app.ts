@@ -5,6 +5,9 @@ import { MongoDBUserRepository } from "./infrastructure/persistence/mongodb/mong
 import { AuthService } from "./domain/services/authService";
 import { JWTTokenService } from "./infrastructure/services/jwtTokenService";
 import { BcryptPasswordService } from "./infrastructure/services/bcryptPasswordService";
+import { config } from "dotenv";
+
+config(); // Load environment variables from .env file
 
 // Dependencies
 const userRepository = new MongoDBUserRepository();
@@ -22,11 +25,18 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
+if (process.env.FEAT_HEALTH_CHECK === "true") {
+  // Health Check
+  app.get("/", (req, res) => {
+    res.send("Hello, World!");
+  });
+}
+console.log("Health check enabled:", process.env.FEAT_HEALTH_CHECK);
+console.log("Authentication enabled:", process.env.FEAT_AUTHENTICATION);
 
 // Routes
-app.use("/api/auth", setupAuthRoutes(authController));
+if (process.env.FEAT_AUTHENTICATION === "true") {
+  app.use("/api/auth", setupAuthRoutes(authController));
+}
 
 export default app;
