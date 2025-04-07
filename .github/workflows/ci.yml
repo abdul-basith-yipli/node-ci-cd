@@ -95,7 +95,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           source: dist/*
-          target: "/home/${{ secrets.DEV_EC2_USER }}/app"
+          target: "/home/${{ secrets.EC2_USER }}/app"
 
       - name: Restart application on EC2
         uses: appleboy/ssh-action@v1
