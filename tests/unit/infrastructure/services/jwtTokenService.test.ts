@@ -5,7 +5,7 @@ describe("JWTTokenService", () => {
   let tokenService: JWTTokenService;
 
   beforeEach(() => {
-    tokenService = new JWTTokenService("test-secret");
+    tokenService = new JWTTokenService("test-secret", "1h");
   });
 
   it("should generate a valid JWT token", () => {
