@@ -5,12 +5,46 @@ on:
 
 jobs:
   deploy-prod:
-    needs: deploy-qa
     runs-on: ubuntu-latest
     environment: prod
+    services:
+      mongodb:
+        image: mongo:5.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-      - name: ☁️ Checkout code
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
+
+      - name: 🟢 Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 📦 Install dependencies
+        run: npm install
+
+      - name: 🧪 Run tests
+        env:
+          MONGO_URI: mongodb://localhost:27017/Node-CI-CD-test
+        run: npm run test:coverage
+
+      - name: 🔨 Build application
+        run: npm run build
+
+      - name: ☁️ Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-build
+          path: |
+            dist
+            package.json
+            package-lock.json
 
       - name: ☁️ Download artifact
         uses: actions/download-artifact@v4
@@ -28,9 +62,10 @@ jobs:
           echo "FEAT_AUTHENTICATION=${{ secrets.FEAT_AUTHENTICATION }}" >> .env
 
       - name: 🗜️ Zip production files
-        run: zip -r build.zip dist package.json package-lock.json .env
+        run: |
+          zip -r build.zip dist package.json package-lock.json .env
 
-      - name: Upload to EC2
+      - name: Upload files to EC2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -52,5 +87,6 @@ jobs:
             unzip -o build.zip
             rm build.zip
             # npm install --production
-            # pm2 reload node-ci-cd || pm2 start dist/server.js --name "node-ci-cd"
+            # pm2 reload all ||  pm2 start dist/server.js --name "node-ci-cd"
             # pm2 save
+            # pm2 startup
