@@ -1,9 +1,11 @@
 import mongoose from "mongoose";
 import { UserModel } from "../../../../../../src/infrastructure/persistence/mongodb/models/userModel";
+import { config } from "dotenv";
+config();
 
 describe("UserModel Schema", () => {
   beforeAll(async () => {
-    await mongoose.connect("mongodb://localhost:27017/Node-CI-CD-test");
+    await mongoose.connect(process.env.TEST_MONGO_URI as string);
   });
 
   afterAll(async () => {

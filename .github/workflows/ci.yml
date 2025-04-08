@@ -13,16 +13,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      mongodb:
-        image: mongo:5.0
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+    # services:
+    #   mongodb:
+    #     image: mongo:5.0
+    #     ports:
+    #       - 27017:27017
+    #     options: >-
+    #       --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
 
     steps:
       - name: 📥 Checkout code
@@ -38,7 +38,7 @@ jobs:
 
       - name: 🧪 Run tests
         env:
-          MONGO_URI: mongodb://localhost:27017/Node-CI-CD-test
+          TEST_MONGO_URI: ${{ secrets.TEST_MONGO_URI }}
         run: npm run test:coverage
 
       - name: 🔨 Build application
