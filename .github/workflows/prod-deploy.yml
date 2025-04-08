@@ -1,0 +1,56 @@
+on:
+  push:
+    tags:
+      - "v*.*.*" # Semantic version tags
+
+jobs:
+  deploy-prod:
+    needs: deploy-qa
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: ☁️ Checkout code
+        uses: actions/checkout@v4
+
+      - name: ☁️ Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-build
+          path: .
+
+      - name: 🔠 Setup environment variables
+        run: |
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "JWT_EXPIRES_IN=${{ secrets.JWT_EXPIRES_IN }}" >> .env
+          echo "FEAT_HEALTH_CHECK=${{ secrets.FEAT_HEALTH_CHECK }}" >> .env
+          echo "FEAT_AUTHENTICATION=${{ secrets.FEAT_AUTHENTICATION }}" >> .env
+
+      - name: 🗜️ Zip production files
+        run: zip -r build.zip dist package.json package-lock.json .env
+
+      - name: Upload to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          source: "build.zip"
+          target: "/home/${{ secrets.EC2_USER }}"
+
+      - name: 🔧 Run post-deploy commands
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/${{ secrets.EC2_USER }}
+            unzip -o build.zip
+            rm build.zip
+            # npm install --production
+            # pm2 reload node-ci-cd || pm2 start dist/server.js --name "node-ci-cd"
+            # pm2 save
