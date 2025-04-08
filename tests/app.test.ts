@@ -9,3 +9,11 @@ describe("GET /", () => {
     expect(response.text).toBe("Hello, World!");
   });
 });
+
+describe("GET /a", () => {
+  it("a!", async () => {
+    const response = await request(app).get("/");
+    expect(response.status).toBe(200);
+    expect(response.text).toBe("Hello, World!");
+  });
+});

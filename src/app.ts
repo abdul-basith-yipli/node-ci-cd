@@ -28,6 +28,11 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
+
+app.get("/a", (req, res) => {
+  res.send("a!");
+});
+
 console.log("Health check enabled:", process.env.FEAT_HEALTH_CHECK);
 console.log("Authentication enabled:", process.env.FEAT_AUTHENTICATION);
 

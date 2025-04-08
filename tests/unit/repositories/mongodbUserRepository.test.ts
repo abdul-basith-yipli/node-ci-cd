@@ -1,12 +1,15 @@
 import { MongoDBUserRepository } from "../../../src/infrastructure/persistence/mongodb/mongodbUserRepository";
 import { UserModel } from "../../../src/infrastructure/persistence/mongodb/models/userModel";
 import mongoose from "mongoose";
+import { config } from "dotenv";
+
+config();
 
 describe("MongoDBUserRepository", () => {
   let repository: MongoDBUserRepository;
 
   beforeAll(async () => {
-    await mongoose.connect("mongodb://localhost:27017/Node-CI-CD-test");
+    await mongoose.connect(process.env.TEST_MONGO_URI as string);
   });
 
   beforeEach(async () => {
