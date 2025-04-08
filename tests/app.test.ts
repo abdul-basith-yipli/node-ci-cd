@@ -10,10 +10,18 @@ describe("GET /", () => {
   });
 });
 
-describe("GET /a", () => {
-  it("a!", async () => {
-    const response = await request(app).get("/");
+// describe("GET /a", () => {
+//   it("a!", async () => {
+//     const response = await request(app).get("/a");
+//     expect(response.status).toBe(200);
+//     expect(response.text).toBe("Hello, World!");
+//   });
+// });
+
+describe("GET /test", () => {
+  it("test!", async () => {
+    const response = await request(app).get("/test");
     expect(response.status).toBe(200);
-    expect(response.text).toBe("Hello, World!");
+    expect(response.text).toBe("Hello, test!");
   });
 });
