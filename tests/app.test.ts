@@ -25,3 +25,11 @@ describe("GET /test", () => {
     expect(response.text).toBe("Hello, test!");
   });
 });
+
+describe("GET /test1", () => {
+  it("test!", async () => {
+    const response = await request(app).get("/test1");
+    expect(response.status).toBe(200);
+    expect(response.text).toBe("Hello, test1!");
+  });
+});
