@@ -37,6 +37,10 @@ app.get("/test", (req, res) => {
   res.send("Hello, test!");
 });
 
+app.get("/test1", (req, res) => {
+  res.send("Hello, test1!");
+});
+
 console.log("Health check enabled:", process.env.FEAT_HEALTH_CHECK);
 console.log("Authentication enabled:", process.env.FEAT_AUTHENTICATION);
 
